@@ -1,5 +1,5 @@
 const functions = require("firebase-functions");
-const { loginUser } = require("./loginUser");
+import {loginUser} from "./loginUser"
 
 module.exports = {
   hello: functions.https.onRequest(async (req, res) => {
