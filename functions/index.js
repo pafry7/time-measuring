@@ -1,9 +1,10 @@
 const functions = require("firebase-functions");
+const { loginUser } = require("./loginUser");
 
 module.exports = {
-  hello: functions.https.onRequest((req, res) => {
-    const subject = req.query.subject || "World";
+  hello: functions.https.onRequest(async (req, res) => {
+    const { mail } = req.query || {};
 
-    res.send(`Hello, ${subject}!`);
+    res.send(mail ? await loginUser(mail) : "please provide mail address");
   }),
 };
