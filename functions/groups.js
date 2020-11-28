@@ -19,12 +19,12 @@ module.exports = {
     });
   },
   getGroupsWithUser: async (id) => {
-    return (await groupsRef.where("members", "array-contains", id).get()).map(
-      (doc) => ({
+    return (await groupsRef.where("members", "array-contains", id).get())
+      .docs()
+      .map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      })
-    );
+      }));
   },
   getSumOfGroupApproaches: async (id) => {
     const members = (await groupsRef.doc(id).get()).data().members;
