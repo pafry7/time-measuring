@@ -1,12 +1,17 @@
 const { challengesRef } = require("./common");
 const { v4 } = require("uuid");
-const { getSumOfGroupApproaches, getGroupsWithUser } = require("./groups");
+const {
+  getSumOfGroupApproaches,
+  getGroupsWithUser,
+  getGroup,
+} = require("./groups");
 
 module.exports = {
   getChallenge: async (id) => {
     const challenge = (await challengesRef.doc(id).get()).data();
     const scores = await Promise.all(
       challenge.groups.map(async (group) => {
+        const group = await getGroup(group);
         const score = await getSumOfGroupApproaches(group);
         return { score, group_id: group, group_name: group.name };
       })
