@@ -10,10 +10,10 @@ module.exports = {
   getChallenge: async (id) => {
     const challenge = (await challengesRef.doc(id).get()).data();
     const scores = await Promise.all(
-      challenge.groups.map(async (group) => {
-        const group = await getGroup(group);
+      challenge.groups.map(async (record) => {
+        const group = await getGroup(record);
         const score = await getSumOfGroupApproaches(group);
-        return { score, group_id: group, group_name: group.name };
+        return { score, group_id: record, group_name: group.name };
       })
     );
     return { ...challenge, scores, id };
