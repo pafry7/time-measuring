@@ -71,9 +71,7 @@ module.exports = {
     if (approaches.empty) return [];
     else return approaches.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   },
-  endApproach: async ({ id, approach }) => {
-    await approachesRef.doc(id).update({ ...approach });
-
+  endApproach: async (id) => {
     const { locations } = (await approachesRef.doc(id).get()).data();
 
     let distance = 0;
