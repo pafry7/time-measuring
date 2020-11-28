@@ -44,4 +44,30 @@ module.exports = {
       .map((doc) => ({ id: doc.id, ...doc.data() }));
     return challenges;
   },
+  endApproach: async ({ id, approach }) => {
+    await approachesRef.doc(id).update({ ...approach });
+
+    const { locations } = (await approachesRef.doc(id).get()).data();
+
+    let distance = 0;
+    let recentParams = {
+      altitude: locations[0].altitude,
+      longitude: locations[0].longitude,
+      elevation: locations[0].elevation,
+    };
+    for (const location of locations) {
+      const step = Math.sqrt(
+        Math.pow(Math.abs(location.altitude - recentParams.altitude), 2) +
+          Math.pow(Math.abs(location.longitude - recentParams.longitude), 2) +
+          Math.pow(math.abs(location.elevation - recentParams.elevation), 2)
+      );
+      recentParams = {
+        ...location,
+      };
+      distance += step;
+    }
+
+    await approachesRef.doc(id).update({ distance });
+    return;
+  },
 };

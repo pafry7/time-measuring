@@ -79,7 +79,7 @@ app.get("/approach/:id", async (req, res) => {
 
 app.post("/approach", async (req, res) => {
   const { ...approach } = JSON.parse(req.body);
-  res.send(await createGroup(approach));
+  res.send(await createApproach(approach));
 });
 
 app.post("/approach/:id/location", async (req, res) => {
@@ -92,6 +92,10 @@ app.post("/approach/:id/verify", async (req, res) => {
   await verifyPhoto({id, photo})
 
   res.send("Photo accepted to verification.");
+});
+
+app.post("/approach/:id/final", async (req, res) => {
+  res.send(await endApproach(req.params.id));
 });
 
 exports.app = functions.https.onRequest(app);
