@@ -2,6 +2,7 @@ const { approachesRef, firestore } = require("./common");
 const { v4 } = require("uuid");
 const { findLandmark } = require("./locations");
 const locations = require("./locations");
+const { getChallenge } = require("./challenges");
 const { reduce } = require;
 const KmInDegree = 111;
 
@@ -14,6 +15,10 @@ module.exports = {
     return { ...approach, duration, id };
   },
   createApproach: async (approach) => {
+    const challenge = await getChallenge(approach.challenge_id);
+    if (JSON.parse(challenge.start_time) > new Date())
+      throw new Error("Challenge not started yet");
+
     const id = v4();
     await approachesRef.doc(id).set({ ...approach });
     return { ...approach, locations: [], id, verified: false };
