@@ -10,7 +10,7 @@ module.exports = {
   }),
   challenge: functions.https.onRequest(async (req, res) => {
     const { httpMethod } = req;
-    console.log(req)
+    console.log(JSON.stringify(req))
     switch (httpMethod) {
       case "GET":
         const { id } = req.id;
@@ -21,5 +21,6 @@ module.exports = {
       case "POST":
         break;
     }
+    res.send("")
   }),
 };
