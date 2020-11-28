@@ -53,8 +53,11 @@ app.post("/challenges", async (req, res) => {
 app.post("/challenges/:id/groups", async (req, res) => {
   const { group_id } = req.body;
   console.log(group_id, req.params.id, admin);
-  setTimeout(() => 
-  res.send(await addGroup({ challenge_id: req.params.id, group_id })), 1000);
+  setTimeout(
+    async () =>
+      res.send(await addGroup({ challenge_id: req.params.id, group_id })),
+    1000
+  );
 });
 
 // ---------- Groups
