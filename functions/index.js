@@ -13,18 +13,17 @@ app.use(cors({ origin: true }));
 
 
 app.get("/", (_, res) => res.send("Hello!"));
-app.get("/app", (_, res) => res.send("Hello app!"));
 
-app.post("/app/hello", async (req, res) => {
+app.post("/hello", async (req, res) => {
   const { mail } = JSON.parse(req.body);
   res.status(200).send({ id: await loginUser(mail) });
 });
 
-app.get("/app/challenges/:id", async (req, res) => {
+app.get("/challenges/:id", async (req, res) => {
   res.send(await getChallenge(req.params.id));
 });
 
-app.post("/app/challenges", async (req, res) => {
+app.post("/challenges", async (req, res) => {
   const { ...challenge } = JSON.parse(req.body);
   res.send(await createChallenge(challenge));
 });
