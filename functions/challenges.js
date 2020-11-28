@@ -5,10 +5,12 @@ const { getSumOfGroupApproaches, getGroupsWithUser } = require("./groups");
 module.exports = {
   getChallenge: async (id) => {
     const challenge = (await challengesRef.doc(id).get()).data();
-    const scores = await challenge.groups.map(async (group) => {
-      const score = await getSumOfGroupApproaches(group);
-      return { score, group_id: group, group_name: group.name };
-    });
+    const scores = await Promise.all(
+      challenge.groups.map(async (group) => {
+        const score = await getSumOfGroupApproaches(group);
+        return { score, group_id: group, group_name: group.name };
+      })
+    );
     return { ...challenge, scores, id };
   },
 
