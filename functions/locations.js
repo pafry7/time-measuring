@@ -25,6 +25,6 @@ module.exports = {
     const landmarks = landmarksByAltitude.filter((landmark) =>
       landmarksByLongitude.includes(landmark)
     );
-    return landmarks?.[0];
+    return landmarks && landmarks[0];
   },
 };
