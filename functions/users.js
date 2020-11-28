@@ -1,5 +1,6 @@
 const { v4 } = require("uuid");
 const { usersRef } = require("./common");
+const { getGroupsWithUser } = require("./groups");
 
 module.exports = {
   loginUser: async (mail) => {
@@ -15,7 +16,8 @@ module.exports = {
 
   getUser: async (id) => {
     const user = (await usersRef.doc(id).get()).data();
-    return { ...user, id };
+    const groups = getGroupsWithUser(id);
+    return { ...user, id, groups };
   },
 
   createUser: async (mail) => {

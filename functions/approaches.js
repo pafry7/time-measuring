@@ -1,18 +1,30 @@
 const { approachesRef, firestore } = require("./common");
 const { v4 } = require("uuid");
 const { findLandmark } = require("./locations");
-
+const { reduce } = require;
 const KmInDegree = 111;
 
 module.exports = {
   getApproach: async (id) => {
     const approach = (await approachesRef.doc(id).get()).data();
-    return { ...approach, id };
+    const duration =
+      approach.locations[locations.length - 1].timestamp.getTime() -
+      approach.locations[0].timestamp.getTime();
+    return { ...approach, duration, id };
   },
   createApproach: async (approach) => {
     const id = v4();
     await approachesRef.doc(id).set({ ...approach });
     return { ...approach, locations: [], id, verified: false };
+  },
+  getSumOfPlayerApproaches: async (id) => {
+    const approaches = (await approachesRef.where("player_id", "==", id).get())
+      .docs()
+      .map((doc) => ({ id: doc.id, ...doc.data() }));
+    let distance = 0;
+    for (const approach of approaches) {
+      distance += approach.distance;
+    }
   },
   addLocation: async ({ id, location }) => {
     const response = await approachesRef

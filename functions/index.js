@@ -2,12 +2,7 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 
 const functions = require("firebase-functions");
-const {
-  loginUser,
-  getUser,
-  updateUser,
-  getUserChallenges,
-} = require("./users");
+const { loginUser, getUser, updateUser } = require("./users");
 const { getChallenge, createChallenge, addGroup } = require("./challenges");
 const { getGroup, createGroup, addMember } = require("./groups");
 
@@ -23,15 +18,11 @@ app.get("/", (_, res) => res.send("Hello!"));
 // ---------- Users
 app.post("/hello", async (req, res) => {
   const { mail } = req.body;
-  res.status(200).send({ id: await loginUser(mail) });
+  res.send({ id: await loginUser(mail) });
 });
 
 app.get("/users/:id", async (req, res) => {
   res.send(await getUser(req.params.id));
-});
-
-app.get("/users/:id/challenges", async (req, res) => {
-  res.send(await getUserChallenges(req.params.id));
 });
 
 app.get("/users/:id/approaches", async (req, res) => {
@@ -74,32 +65,32 @@ app.post("/groups", async (req, res) => {
 
 app.post("/groups/:id/members", async (req, res) => {
   const { user_id } = req.body;
-  res.send(await addMember({ group_id: id, user_id }));
+  res.send(await addMember({ group_id: req.params.id, user_id }));
 });
 
 // ---------- Approaches
-app.get("/approach/:id", async (req, res) => {
+app.get("/approaches/:id", async (req, res) => {
   res.send(await getGroup(req.params.id));
 });
 
-app.post("/approach", async (req, res) => {
+app.post("/approaches", async (req, res) => {
   const { ...approach } = req.body;
   res.send(await createApproach(approach));
 });
 
-app.post("/approach/:id/location", async (req, res) => {
+app.post("/approaches/:id/location", async (req, res) => {
   const { ...location } = req.body;
   res.send(await addLocation({ id, location }));
 });
 
-app.post("/approach/:id/verify", async (req, res) => {
+app.post("/approaches/:id/verify", async (req, res) => {
   const { photo } = req.body;
   await verifyPhoto({ id, photo });
 
   res.send("Photo accepted to verification.");
 });
 
-app.post("/approach/:id/final", async (req, res) => {
+app.post("/approaches/:id/final", async (req, res) => {
   res.send(await endApproach(req.params.id));
 });
 

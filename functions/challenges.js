@@ -1,15 +1,20 @@
 const { challengesRef, firestore } = require("./common");
 const { v4 } = require("uuid");
+const { getSumOfGroupApproaches } = require("./groups");
 
 module.exports = {
   getChallenge: async (id) => {
     const challenge = (await challengesRef.doc(id).get()).data();
-    return { ...challenge, id };
+    const scores = challenge.groups.map(group => {
+      const score = await getSumOfGroupApproaches(group);
+      return ({score, group_id: group})
+    })
+    return { ...challenge, scores, id };
   },
 
   createChallenge: async (challenge) => {
     const id = v4();
-    await challengesRef.doc(id).set({ ...challenge });
+    await challengesRef.doc(id).set({ ...challenge, groups:[] });
     return { ...challenge, id };
   },
 
