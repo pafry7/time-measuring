@@ -8,7 +8,7 @@ const { getGroup, createGroup, addMember } = require("./groups");
 
 const express = require("express");
 const cors = require("cors");
-const { addLocation } = require("./approaches");
+const { addLocation, verifyPhoto } = require("./approaches");
 
 const app = express();
 app.use(cors({ origin: true }));
@@ -73,6 +73,13 @@ app.post("/approach", async (req, res) => {
 app.post("/approach/:id/location", async (req, res) => {
   const { ...location } = JSON.parse(req.body);
   res.send(await addLocation({id, location}));
+});
+
+app.post("/approach/:id/verify", async (req, res) => {
+  const { photo } = JSON.parse(req.body);
+  await verifyPhoto({id, photo})
+
+  res.send("Photo accepted to verification.");
 });
 
 exports.app = functions.https.onRequest(app);

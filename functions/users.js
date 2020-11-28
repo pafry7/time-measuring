@@ -24,9 +24,8 @@ const createUser = async (mail) => {
 };
 
 const updateUser = async (id, data) => {
-  await approachesRef.doc(id).update({ ...data });
+  await usersRef.doc(id).update({ ...data });
 };
-
 
 module.exports = {
   loginUser,
