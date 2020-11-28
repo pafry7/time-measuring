@@ -1,15 +1,10 @@
-const { Firestore } = require("@google-cloud/firestore");
 const { v4 } = require("uuid");
-
-const firestore = new Firestore();
-const usersRef = firestore.collection("users");
-
+const {usersRef} = require("./common")
 const loginUser = async (mail) => {
-
   const snapshot = await usersRef.where("mail", "==", mail).get();
 
   if (snapshot.empty) {
-    const id = await createUser(mail)
+    const id = await createUser(mail);
     return id;
   }
 
