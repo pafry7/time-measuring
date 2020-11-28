@@ -12,7 +12,7 @@ module.exports = {
     const scores = await Promise.all(
       challenge.groups.map(async (record) => {
         const group = await getGroup(record);
-        const score = await getSumOfGroupApproaches(group);
+        const score = await getSumOfGroupApproaches(record);
         return { score, group_id: record, group_name: group.name };
       })
     );
