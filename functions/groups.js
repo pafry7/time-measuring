@@ -25,13 +25,6 @@ module.exports = {
       .get();
     if (response.empty) return [];
 
-    console.log("user groups [0] response: ");
-    console.log(response.docs[0]);
-
-    response.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
-    });
-
     return response.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -40,7 +33,7 @@ module.exports = {
   getSumOfGroupApproaches: async (id) => {
     const members = (await groupsRef.doc(id).get()).data().members;
     let distance = 0;
-    for (const member of members) {
+    for await (const member of members) {
       const memberDistance = await getSumOfPlayerApproaches(member);
       distance += memberDistance;
     }

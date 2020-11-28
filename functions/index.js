@@ -3,7 +3,13 @@ admin.initializeApp();
 
 const functions = require("firebase-functions");
 const { loginUser, getUser, updateUser } = require("./users");
-const { getChallenge, createChallenge, addGroup } = require("./challenges");
+const {
+  getChallenge,
+  createChallenge,
+  addGroup,
+  getUserChallenges,
+  getAdminChallenges,
+} = require("./challenges");
 const { getGroup, createGroup, addMember } = require("./groups");
 const { addLocation, verifyPhoto, getUserApproaches } = require("./approaches");
 
@@ -22,9 +28,15 @@ app.post("/hello", async (req, res) => {
 });
 
 app.get("/users/:id", async (req, res) => {
-  // TODO
-  // Fetch user's challenges.
   res.send(await getUser(req.params.id));
+});
+
+app.get("/users/:id/challenges", async (req, res) => {
+  res.send(await getUserChallenges(req.params.id));
+});
+
+app.get("/users/:id/admin_challenges", async (req, res) => {
+  res.send(await getAdminChallenges(req.params.id));
 });
 
 app.get("/users/:id/approaches", async (req, res) => {

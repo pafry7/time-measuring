@@ -1,6 +1,6 @@
-const { challengesRef, firestore } = require("./common");
+const { challengesRef } = require("./common");
 const { v4 } = require("uuid");
-const { getSumOfGroupApproaches } = require("./groups");
+const { getSumOfGroupApproaches, getGroupsWithUser } = require("./groups");
 
 module.exports = {
   getChallenge: async (id) => {
@@ -25,7 +25,7 @@ module.exports = {
       .update({ groups: [...challenge.groups, group_id] });
   },
 
-  getUserChallenges: async (id) => {
+  getAdminChallenges: async (id) => {
     const response = await challengesRef.where("admin_id", "==", id).get();
     if (response.empty) return [];
 
@@ -33,6 +33,24 @@ module.exports = {
       id: doc.id,
       ...doc.data(),
     }));
+    return challenges;
+  },
+
+  getUserChallenges: async (id) => {
+    const groups = (await getGroupsWithUser(id)).map((group) => group.id);
+    const challenges = [];
+    for await (const group of groups) {
+      const temp = await challengesRef
+        .where("groups", "array-contains", group)
+        .get();
+      if (!temp.empty)
+        challenges.push([
+          ...temp.map((challenge) => ({
+            id: challenge.id,
+            ...challenge.data(),
+          })),
+        ]);
+    }
     return challenges;
   },
 
