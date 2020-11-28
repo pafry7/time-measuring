@@ -8,7 +8,8 @@ const cors = require("cors");
 const app = express();
 app.use(cors({ origin: true }));
 
-app.get("/app", (req, res) => res.send("Hello!"));
+app.get("/", (_, res) => res.send("Hello!"));
+app.get("/app", (_, res) => res.send("Hello app!"));
 
 app.post("/app/hello", async (req, res) => {
   const { mail } = JSON.parse(req.body);
