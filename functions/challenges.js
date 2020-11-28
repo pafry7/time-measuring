@@ -20,7 +20,7 @@ module.exports = {
   },
 
   addGroup: async ({ challenge_id, group_id }) => {
-    const challenge = await this.getChallenge(challenge_id);
+    const challenge = await getChallenge(challenge_id);
     await challengesRef
       .doc(challenge_id)
       .update({ groups: [...challenge.groups, group_id] });
