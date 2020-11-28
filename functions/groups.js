@@ -1,6 +1,7 @@
 const { groupsRef } = require("./common");
 const { v4 } = require("uuid");
 const { getSumOfPlayerApproaches } = require("./approaches");
+const { response } = require("express");
 
 module.exports = {
   getGroup: async (id) => {
@@ -19,8 +20,11 @@ module.exports = {
     });
   },
   getGroupsWithUser: async (id) => {
-    return (await groupsRef.where("members", "array-contains", id).get())
-      .docs()
+    const response = await groupsRef.where("members", "array-contains", id).get()
+    .docs() 
+    console.log("user groups response: ")
+    console.log(response)
+    return response(
       .map((doc) => ({
         id: doc.id,
         ...doc.data(),
