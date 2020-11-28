@@ -40,7 +40,7 @@ app.get("/users/:id/approaches", async (req, res) => {
 
 app.patch("/users/:id", async (req, res) => {
   const { ...user } = req.body;
-  res.send(await updateUser({ id, user }));
+  res.send(await updateUser({ id: req.params.id, user }));
 });
 
 // ---------- Challenges
