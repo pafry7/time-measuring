@@ -58,9 +58,6 @@ module.exports = {
       elevation: locations[0].elevation,
     };
     for (const location of locations) {
-      // TODO
-      // Calculate degrees to meters
-
       const step = Math.sqrt(
         Math.pow(
           Math.abs(location.altitude - recentParams.altitude) * KmInDegree,

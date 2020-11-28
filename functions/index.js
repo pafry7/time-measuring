@@ -59,7 +59,7 @@ app.post("/challenges", async (req, res) => {
 
 app.post("/challenges/:id/groups", async (req, res) => {
   const { group_id } = req.body;
-  res.send(await addGroup({ challenge_id: id, group_id }));
+  res.send(await addGroup({ challenge_id: req.params.id, group_id }));
 });
 
 // ---------- Groups
