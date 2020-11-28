@@ -1,7 +1,7 @@
 const { v4 } = require("uuid");
 const { usersRef } = require("./common");
 
-modules.exports = {
+module.exports = {
   loginUser: async (mail) => {
     const snapshot = await usersRef.where("mail", "==", mail).get();
 
