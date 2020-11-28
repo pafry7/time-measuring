@@ -1,7 +1,6 @@
 const { groupsRef } = require("./common");
 const { v4 } = require("uuid");
 const { getSumOfPlayerApproaches } = require("./approaches");
-const { response } = require("express");
 
 module.exports = {
   getGroup: async (id) => {

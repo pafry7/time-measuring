@@ -9,6 +9,7 @@ const {
   addGroup,
   getUserChallenges,
   getAdminChallenges,
+  getAvailableChallenges,
 } = require("./challenges");
 const { getGroup, createGroup, addMember } = require("./groups");
 const {

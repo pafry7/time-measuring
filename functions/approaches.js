@@ -1,9 +1,8 @@
-const { approachesRef, firestore } = require("./common");
+const { approachesRef } = require("./common");
 const { v4 } = require("uuid");
 const { findLandmark } = require("./locations");
 const locations = require("./locations");
 const { getChallenge } = require("./challenges");
-const { reduce } = require;
 const KmInDegree = 111;
 
 module.exports = {
