@@ -9,8 +9,8 @@ module.exports = {
     res.status(200).send({ id: await loginUser(mail) });
   }),
   challenge: functions.https.onRequest(async (req, res) => {
-    const { httpMethod } = req;
-    switch (httpMethod) {
+    const { method } = req;
+    switch (method) {
       case "GET":
         const { id } = req.id;
         console.log("waiting for response from firebase...")
