@@ -2,6 +2,8 @@ const { approachesRef, firestore } = require("./common");
 const { v4 } = require("uuid");
 const { findLandmark } = require("./locations");
 
+const KmInDegree = 111;
+
 module.exports = {
   getApproach: async (id) => {
     const approach = (await approachesRef.doc(id).get()).data();
@@ -60,8 +62,14 @@ module.exports = {
       // Calculate degrees to meters
 
       const step = Math.sqrt(
-        Math.pow(Math.abs(location.altitude - recentParams.altitude), 2) +
-          Math.pow(Math.abs(location.longitude - recentParams.longitude), 2) +
+        Math.pow(
+          Math.abs(location.altitude - recentParams.altitude) * KmInDegree,
+          2
+        ) +
+          Math.pow(
+            Math.abs(location.longitude - recentParams.longitude) * KmInDegree,
+            2
+          ) +
           Math.pow(math.abs(location.elevation - recentParams.elevation), 2)
       );
       recentParams = {
