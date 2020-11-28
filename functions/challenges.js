@@ -3,7 +3,7 @@ const { v4 } = require("uuid");
 
 module.exports = {
   getChallenge: async (id) => {
-    const challenge = (await challengesRef.doc(id).get()).docs()[0].data();
+    const challenge = (await challengesRef.doc(id).get()).data();
     return { ...challenge, id };
   },
   createChallenge: async (challenge) => {
@@ -11,9 +11,9 @@ module.exports = {
     await challengesRef.doc(id).set({ ...challenge });
     return { ...challenge, id };
   },
-  addGroup: async({challenge_id,group_id}) => {
+  addGroup: async ({ challenge_id, group_id }) => {
     const response = await challengesRef.doc(challenge_id).update({
-      groups: firestore.FieldValue.arrayUnion(group_id)
+      groups: firestore.FieldValue.arrayUnion(group_id),
     });
-  }
+  },
 };

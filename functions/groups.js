@@ -3,7 +3,7 @@ const { v4 } = require("uuid");
 
 module.exports = {
   getGroup: async (id) => {
-    const group = (await groupsRef.doc(id).get()).docs()[0].data();
+    const group = (await groupsRef.doc(id).get()).data();
     return { ...group, id };
   },
   createGroup: async (group) => {
@@ -11,9 +11,9 @@ module.exports = {
     await groupsRef.doc(id).set({ ...group });
     return { ...group, id };
   },
-  addMember: async({user_id,group_id}) => {
+  addMember: async ({ user_id, group_id }) => {
     const response = await groupsRef.doc(group_id).update({
-      members: firestore.FieldValue.arrayUnion(user_id)
+      members: firestore.FieldValue.arrayUnion(user_id),
     });
-  }
+  },
 };
