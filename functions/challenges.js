@@ -29,9 +29,10 @@ module.exports = {
     const response = await challengesRef.where("admin_id", "==", id).get();
     if (response.empty) return [];
 
-    const challenges = response
-      .docs()
-      .map((doc) => ({ id: doc.id, ...doc.data() }));
+    const challenges = response.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     return challenges;
   },
 
@@ -41,9 +42,10 @@ module.exports = {
       .get();
     if (response.empty) return [];
 
-    const challenges = response
-      .docs()
-      .map((doc) => ({ id: doc.id, ...doc.data() }));
+    const challenges = response.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     return challenges;
   },
 };

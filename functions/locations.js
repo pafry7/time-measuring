@@ -10,7 +10,7 @@ module.exports = {
       .get();
     const landmarksByAltitude = landmarksByAltitudeResponse.empty
       ? []
-      : landmarksByAltitudeResponse.docs().map((doc) => doc.id);
+      : landmarksByAltitudeResponse.docs.map((doc) => doc.id);
 
     const landmarksByLongitudeResponse = await landmarksRef
       .where("longitude", ">", longitude - PRECISION)
@@ -18,7 +18,7 @@ module.exports = {
       .get();
     const landmarksByLongitude = landmarksByLongitudeResponse.empty
       ? []
-      : landmarksByLongitudeResponse.docs().map((doc) => doc.id);
+      : landmarksByLongitudeResponse.docs.map((doc) => doc.id);
 
     const landmarks = landmarksByAltitude.filter((landmark) =>
       landmarksByLongitude.includes(landmark)

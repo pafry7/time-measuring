@@ -27,7 +27,7 @@ module.exports = {
 
     console.log("user groups response: ");
     console.log(response);
-    return response.docs().map((doc) => ({
+    return response.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
