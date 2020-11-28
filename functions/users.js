@@ -24,7 +24,7 @@ module.exports = {
     return id;
   },
 
-  updateUser: async (id, data) => {
-    await usersRef.doc(id).update({ ...data });
+  updateUser: async ({ id, user }) => {
+    await usersRef.doc(id).update({ ...user });
   },
 };
