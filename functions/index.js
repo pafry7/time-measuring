@@ -10,7 +10,6 @@ module.exports = {
   }),
   challenge: functions.https.onRequest(async (req, res) => {
     const { httpMethod } = req;
-    console.log(JSON.stringify(req))
     switch (httpMethod) {
       case "GET":
         const { id } = req.id;
