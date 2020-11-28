@@ -69,7 +69,15 @@ module.exports = {
     console.log("APPROACHES:");
     console.log(approaches);
     if (approaches.empty) return [];
-    else return approaches.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    else {
+      return approaches.docs.map((doc) => {
+        const doc_details = doc.data();
+        const duration =
+          doc_details.locations[locations.length - 1].timestamp.getTime() -
+          doc_details.locations[0].timestamp.getTime();
+        return { id: doc.id, ...doc_details, duration };
+      });
+    }
   },
   endApproach: async (id) => {
     const { locations } = (await approachesRef.doc(id).get()).data();
