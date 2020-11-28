@@ -12,9 +12,9 @@ module.exports = {
     const { method } = req;
     switch (method) {
       case "GET":
-        const { id } = req.id;
+        const { id } = req.query;
         console.log("waiting for response from firebase...")
-        const challenge = (await challengesRef.doc(query.id).get()).data();
+        const challenge = (await challengesRef.doc(id).get()).data();
         res.status(200).send({ ...challenge, id });
         break;
       case "POST":
