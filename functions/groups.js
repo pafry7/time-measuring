@@ -13,8 +13,9 @@ module.exports = {
     return { ...group, id };
   },
   addMember: async ({ user_id, group_id }) => {
+    const group = (await groupsRef.doc(group_id).get()).data();
     const response = await groupsRef.doc(group_id).update({
-      members: firestore.FieldValue.arrayUnion(user_id),
+      members: [...group.members, user_id],
     });
   },
   getGroupsWithUser: async (id) => {

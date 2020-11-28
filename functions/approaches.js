@@ -1,6 +1,7 @@
 const { approachesRef, firestore } = require("./common");
 const { v4 } = require("uuid");
 const { findLandmark } = require("./locations");
+const locations = require("./locations");
 const { reduce } = require;
 const KmInDegree = 111;
 
@@ -27,9 +28,10 @@ module.exports = {
     }
   },
   addLocation: async ({ id, location }) => {
+    const approach = (await approachesRef.doc(id).get()).data();
     const response = await approachesRef
       .doc(id)
-      .update({ locations: firestore.FieldValue.arrayUnion(location) });
+      .update({ locations: [...approach.locations, location] });
 
     const { verified } = (await approachesRef.doc(id).get()).data();
 
