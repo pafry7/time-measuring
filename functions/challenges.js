@@ -3,7 +3,7 @@ const { v4 } = require("uuid");
 
 module.exports = {
   getChallenge: async (id) => {
-    const challenge = (await challengesRef.doc(id).get()).data();
+    const challenge = (await challengesRef.doc(id).get()).docs()[0].data();
     return { ...challenge, id };
   },
   createChallenge: async (challenge) => {

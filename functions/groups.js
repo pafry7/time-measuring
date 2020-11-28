@@ -3,7 +3,7 @@ const { v4 } = require("uuid");
 
 module.exports = {
   getGroup: async (id) => {
-    const group = (await groupsRef.doc(id).get()).data();
+    const group = (await groupsRef.doc(id).get()).docs()[0].data();
     return { ...group, id };
   },
   createGroup: async (group) => {
