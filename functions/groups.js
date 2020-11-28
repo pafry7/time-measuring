@@ -20,15 +20,16 @@ module.exports = {
     });
   },
   getGroupsWithUser: async (id) => {
-    const response = await groupsRef.where("members", "array-contains", id).get()
-    .docs() 
-    console.log("user groups response: ")
-    console.log(response)
-    return response(
-      .map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const response = await groupsRef
+      .where("members", "array-contains", id)
+      .get()
+      .docs();
+    console.log("user groups response: ");
+    console.log(response);
+    return response.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
   },
   getSumOfGroupApproaches: async (id) => {
     const members = (await groupsRef.doc(id).get()).data().members;
