@@ -26,6 +26,7 @@ module.exports = {
     for (const approach of approaches) {
       distance += approach.distance;
     }
+    return distance;
   },
   addLocation: async ({ id, location }) => {
     const approach = (await approachesRef.doc(id).get()).data();

@@ -1,4 +1,4 @@
-const { groupsRef, firestore } = require("./common");
+const { groupsRef } = require("./common");
 const { v4 } = require("uuid");
 const { getSumOfPlayerApproaches } = require("./approaches");
 
@@ -33,5 +33,6 @@ module.exports = {
       const memberDistance = await getSumOfPlayerApproaches(member);
       distance += memberDistance;
     }
+    return distance;
   },
 };

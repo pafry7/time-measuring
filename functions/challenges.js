@@ -2,17 +2,16 @@ const { challengesRef, firestore } = require("./common");
 const { v4 } = require("uuid");
 const { getSumOfGroupApproaches } = require("./groups");
 
-const getChallenge = async (id) => {
-  const challenge = (await challengesRef.doc(id).get()).data();
-  const scores = challenge.groups.map(async (group) => {
-    const score = await getSumOfGroupApproaches(group);
-    return { score, group_id: group };
-  });
-  return { ...challenge, scores, id };
-};
-
 module.exports = {
-  getChallenge,
+  getChallenge: async (id) => {
+    const challenge = (await challengesRef.doc(id).get()).data();
+    const scores = challenge.groups.map(async (group) => {
+      const score = await getSumOfGroupApproaches(group);
+      return { score, group_id: group, group_name: group.name };
+    });
+    return { ...challenge, scores, id };
+  },
+
   createChallenge: async (challenge) => {
     const id = v4();
     await challengesRef.doc(id).set({ ...challenge, groups: [] });
@@ -20,7 +19,7 @@ module.exports = {
   },
 
   addGroup: async ({ challenge_id, group_id }) => {
-    const challenge = await getChallenge(challenge_id);
+    const challenge = (await challengesRef.doc(id).get()).data();
     await challengesRef
       .doc(challenge_id)
       .update({ groups: [...challenge.groups, group_id] });
