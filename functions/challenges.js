@@ -19,9 +19,10 @@ module.exports = {
   },
 
   addGroup: async ({ challenge_id, group_id }) => {
-    const response = await challengesRef.doc(challenge_id).update({
-      groups: firestore.FieldValue.arrayUnion(group_id),
-    });
+    const challenge = await this.getChallenge(challenge_id);
+    await challengesRef
+      .doc(challenge_id)
+      .update({ groups: [...challenge.groups, group_id] });
   },
 
   getUserChallenges: async (id) => {
