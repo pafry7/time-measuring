@@ -13,7 +13,11 @@ const loginUser = async (mail) => {
     return id;
   }
 
-  return snapshot[0].id;
+  // snapshot.forEach(doc => {
+  //   console.log(doc.id, '=>', doc.data());
+  // });
+
+  return snapshot.docs[0].id;
 };
 
 const createUser = async (mail) => {
