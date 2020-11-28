@@ -15,7 +15,7 @@ module.exports = {
   createChallenge: async (challenge) => {
     const id = v4();
     await challengesRef.doc(id).set({ ...challenge, groups: [] });
-    return { ...challenge, id };
+    return { ...challenge, groups: [], id };
   },
 
   addGroup: async ({ challenge_id, group_id }) => {
