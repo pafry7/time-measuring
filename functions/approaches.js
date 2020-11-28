@@ -66,8 +66,6 @@ module.exports = {
   },
   getUserApproaches: async (id) => {
     const approaches = await approachesRef.where("player_id", "==", id).get();
-    console.log("APPROACHES:");
-    console.log(approaches);
     if (approaches.empty) return [];
     else {
       return approaches.docs.map((doc) => {

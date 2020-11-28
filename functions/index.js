@@ -11,7 +11,12 @@ const {
   getAdminChallenges,
 } = require("./challenges");
 const { getGroup, createGroup, addMember } = require("./groups");
-const { addLocation, verifyPhoto, getUserApproaches } = require("./approaches");
+const {
+  addLocation,
+  verifyPhoto,
+  getUserApproaches,
+  getApproach,
+} = require("./approaches");
 
 const express = require("express");
 const cors = require("cors");
@@ -64,12 +69,7 @@ app.post("/challenges", async (req, res) => {
 
 app.post("/challenges/:id/groups", async (req, res) => {
   const { group_id } = req.body;
-  console.log(group_id, req.params.id, admin);
-  setTimeout(
-    async () =>
-      res.send(await addGroup({ challenge_id: req.params.id, group_id })),
-    1000
-  );
+  res.send(await addGroup({ challenge_id: req.params.id, group_id }));
 });
 
 // ---------- Groups
@@ -89,7 +89,7 @@ app.post("/groups/:id/members", async (req, res) => {
 
 // ---------- Approaches
 app.get("/approaches/:id", async (req, res) => {
-  res.send(await getGroup(req.params.id));
+  res.send(await getApproach(req.params.id));
 });
 
 app.post("/approaches", async (req, res) => {
