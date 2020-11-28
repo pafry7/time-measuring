@@ -10,14 +10,13 @@ module.exports = {
   }),
   challenge: functions.https.onRequest(async (req, res) => {
     const { httpMethod } = req;
+    console.log(req)
     switch (httpMethod) {
       case "GET":
         const { id } = req.id;
-        const challenge = {
-          ...(await challengesRef.doc(query.id).get()).data(),
-          id,
-        };
-        res.status(200).send({id})
+        console.log("waiting for response from firebase...")
+        const challenge = (await challengesRef.doc(query.id).get()).data();
+        res.status(200).send({ ...challenge, id });
         break;
       case "POST":
         break;
