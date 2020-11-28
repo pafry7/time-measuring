@@ -1,7 +1,9 @@
+const admin = require('firebase-admin');
+admin.initializeApp();
+
 const functions = require("firebase-functions");
 const { loginUser } = require("./users");
 const { getChallenge, createChallenge } = require("./challenges");
-const admin = require('firebase-admin');
 
 const express = require("express");
 const cors = require("cors");
@@ -9,7 +11,6 @@ const cors = require("cors");
 const app = express();
 app.use(cors({ origin: true }));
 
-admin.initializeApp();
 
 app.get("/", (_, res) => res.send("Hello!"));
 app.get("/app", (_, res) => res.send("Hello app!"));

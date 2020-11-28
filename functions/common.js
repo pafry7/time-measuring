@@ -1,7 +1,7 @@
-// const { Firestore } = require("@google-cloud/firestore");
-const admin = require('firebase-admin');
+const { Firestore } = require("@google-cloud/firestore");
+// const admin = require('firebase-admin');
 
-const firestore = admin.firestore();
+const firestore = new Firestore();
 const usersRef = firestore.collection("users");
 const landmarksRef = firestore.collection("landmarks");
 const challengesRef = firestore.collection("challenges");
