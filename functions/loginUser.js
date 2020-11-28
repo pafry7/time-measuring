@@ -5,8 +5,20 @@ const firestore = new Firestore();
 const usersRef = firestore.collection("users");
 
 const loginUser = async (mail) => {
-  const user = await usersRef.where("mail", "==", mail).get();
-  return user;
+  const users = [];
+
+  const snapshot = await usersRef.where("mail", "==", mail).get();
+
+  if (snapshot.empty) {
+    console.log("No matching documents.");
+    return;
+  }
+
+  snapshot.forEach((doc) => {
+    users.push({ id: doc.id, data: doc.data() });
+  });
+
+  return users;
 };
 
 const createUser = async (mail) => {
