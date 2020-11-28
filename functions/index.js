@@ -1,25 +1,26 @@
 const functions = require("firebase-functions");
-const { challengesRef } = require("./common");
-const { loginUser } = require("./loginUser");
+const { loginUser } = require("./users");
+const { getChallenge, createChallenge } = require("./challenge");
 
-module.exports = {
-  hello: functions.https.onRequest(async (req, res) => {
-    const { mail } = req.query || {};
+const express = require("express");
+const cors = require("cors");
 
-    res.status(200).send({ id: await loginUser(mail) });
-  }),
-  challenge: functions.https.onRequest(async (req, res) => {
-    const { method } = req;
-    switch (method) {
-      case "GET":
-        const { id } = req.query;
-        console.log("waiting for response from firebase...")
-        const challenge = (await challengesRef.doc(id).get()).data();
-        res.status(200).send({ ...challenge, id });
-        break;
-      case "POST":
-        break;
-    }
-    res.send("")
-  }),
-};
+const app = express();
+app.use(cors({ origin: true }));
+
+app.post("/hello", async (req, res) => {
+  const { mail } = JSON.parse(req.body);
+  res.status(200).send({ id: await loginUser(mail) });
+});
+
+app.get("/challenges/:id", async (req, res) => {
+  res.send(await getChallenge(req.params.id));
+});
+
+app.post("/challenges", async (req, res) => {
+  const { ...challenge } = JSON.parse(req.body);
+  res.send(await createChallenge(challenge));
+});
+
+
+exports.app = functions.https.onRequest(app);
