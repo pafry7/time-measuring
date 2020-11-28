@@ -38,4 +38,10 @@ module.exports = {
 
     await approachesRef.doc(id).update({ verified: true });
   },
+  getUserApproaches: async (id) => {
+    const challenges = (await challengesRef.where("player_id", "==", id).get())
+      .docs()
+      .map((doc) => ({ id: doc.id, ...doc.data() }));
+    return challenges;
+  },
 };

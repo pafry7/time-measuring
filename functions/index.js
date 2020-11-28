@@ -2,13 +2,13 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 
 const functions = require("firebase-functions");
-const { loginUser, getUser, updateUser } = require("./users");
+const { loginUser, getUser, updateUser, getUserChallenges } = require("./users");
 const { getChallenge, createChallenge, addGroup } = require("./challenges");
 const { getGroup, createGroup, addMember } = require("./groups");
 
 const express = require("express");
 const cors = require("cors");
-const { addLocation, verifyPhoto } = require("./approaches");
+const { addLocation, verifyPhoto, getUserApproaches } = require("./approaches");
 
 const app = express();
 app.use(cors({ origin: true }));
@@ -25,6 +25,14 @@ app.get("/users/:id", async (req, res) => {
   res.send(await getUser(req.params.id));
 });
 
+app.get("/users/:id/challenges", async (req, res) => {
+  res.send(await getUserChallenges(req.params.id));
+});
+
+app.get("/users/:id/approaches", async (req, res) => {
+  res.send(await getUserApproaches(req.params.id));
+});
+
 app.patch("/users/:id", async (req, res) => {
   const { ...user } = JSON.parse(req.body);
   res.send(await updateUser(user));
@@ -33,6 +41,10 @@ app.patch("/users/:id", async (req, res) => {
 // ---------- Challenges
 app.get("/challenges/:id", async (req, res) => {
   res.send(await getChallenge(req.params.id));
+});
+
+app.get("/challenges", async (req, res) => {
+  res.send(await getAvailableChallenges(req.params.id));
 });
 
 app.post("/challenges", async (req, res) => {

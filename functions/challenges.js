@@ -6,14 +6,34 @@ module.exports = {
     const challenge = (await challengesRef.doc(id).get()).data();
     return { ...challenge, id };
   },
+
   createChallenge: async (challenge) => {
     const id = v4();
     await challengesRef.doc(id).set({ ...challenge });
     return { ...challenge, id };
   },
+
   addGroup: async ({ challenge_id, group_id }) => {
     const response = await challengesRef.doc(challenge_id).update({
       groups: firestore.FieldValue.arrayUnion(group_id),
     });
+  },
+
+  getUserChallenges: async (id) => {
+    const challenges = (await challengesRef.where("admin_id", "==", id).get())
+      .docs()
+      .map((doc) => ({ id: doc.id, ...doc.data() }));
+    return challenges;
+  },
+
+  getAvailableChallenges: async (id) => {
+    const challenges = (
+      await challengesRef
+        .where("end_time", "<", JSON.stringify(new Date()))
+        .get()
+    )
+      .docs()
+      .map((doc) => ({ id: doc.id, ...doc.data() }));
+    return challenges;
   },
 };
