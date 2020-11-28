@@ -16,7 +16,7 @@ module.exports = {
 
   getUser: async (id) => {
     const user = (await usersRef.doc(id).get()).data();
-    const groups = getGroupsWithUser(id);
+    const groups = await getGroupsWithUser(id);
     return { ...user, id, groups };
   },
 
