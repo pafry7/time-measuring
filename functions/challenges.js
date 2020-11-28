@@ -26,18 +26,22 @@ module.exports = {
   },
 
   getUserChallenges: async (id) => {
-    const challenges = (await challengesRef.where("admin_id", "==", id).get())
+    const response = await challengesRef.where("admin_id", "==", id).get();
+    if (response.empty) return [];
+
+    const challenges = response
       .docs()
       .map((doc) => ({ id: doc.id, ...doc.data() }));
     return challenges;
   },
 
   getAvailableChallenges: async () => {
-    const challenges = (
-      await challengesRef
-        .where("end_time", "<", JSON.stringify(new Date()))
-        .get()
-    )
+    const response = await challengesRef
+      .where("end_time", "<", JSON.stringify(new Date()))
+      .get();
+    if (response.empty) return [];
+
+    const challenges = response
       .docs()
       .map((doc) => ({ id: doc.id, ...doc.data() }));
     return challenges;

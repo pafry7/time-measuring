@@ -20,12 +20,14 @@ module.exports = {
     });
   },
   getGroupsWithUser: async (id) => {
-    const response = (
-      await groupsRef.where("members", "array-contains", id).get()
-    ).docs();
+    const response = await groupsRef
+      .where("members", "array-contains", id)
+      .get();
+    if (response.empty) return [];
+
     console.log("user groups response: ");
     console.log(response);
-    return response.map((doc) => ({
+    return response.docs().map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));

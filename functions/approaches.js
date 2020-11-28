@@ -19,7 +19,10 @@ module.exports = {
     return { ...approach, locations: [], id, verified: false };
   },
   getSumOfPlayerApproaches: async (id) => {
-    const approaches = (await approachesRef.where("player_id", "==", id).get())
+    const response = await approachesRef.where("player_id", "==", id).get();
+    if (response.empty) return 0;
+
+    const approaches = response
       .docs()
       .map((doc) => ({ id: doc.id, ...doc.data() }));
     let distance = 0;
@@ -56,10 +59,9 @@ module.exports = {
     await approachesRef.doc(id).update({ verified: true });
   },
   getUserApproaches: async (id) => {
-    const challenges = (await approachesRef.where("player_id", "==", id).get())
-      .docs()
-      .map((doc) => ({ id: doc.id, ...doc.data() }));
-    return challenges;
+    const approaches = await approachesRef.where("player_id", "==", id).get();
+    if (approaches.empty) return [];
+    else return approaches.docs().map((doc) => ({ id: doc.id, ...doc.data() }));
   },
   endApproach: async ({ id, approach }) => {
     await approachesRef.doc(id).update({ ...approach });

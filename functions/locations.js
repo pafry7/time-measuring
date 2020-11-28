@@ -4,23 +4,21 @@ const PRECISION = 0.001;
 
 module.exports = {
   findLandmark: async ({ altitude, longitude }) => {
-    const landmarksByAltitude = (
-      await landmarksRef
-        .where("altitude", ">", altitude - PRECISION)
-        .where("altitude", "<", altitude + PRECISION)
-        .get()
-    )
-      .docs()
-      .map((doc) => doc.id);
+    const landmarksByAltitudeResponse = await landmarksRef
+      .where("altitude", ">", altitude - PRECISION)
+      .where("altitude", "<", altitude + PRECISION)
+      .get();
+    const landmarksByAltitude = landmarksByAltitudeResponse.empty
+      ? []
+      : landmarksByAltitudeResponse.docs().map((doc) => doc.id);
 
-    const landmarksByLongitude = (
-      await landmarksRef
-        .where("longitude", ">", longitude - PRECISION)
-        .where("longitude", "<", longitude + PRECISION)
-        .get()
-    )
-      .docs()
-      .map((doc) => doc.id);
+    const landmarksByLongitudeResponse = await landmarksRef
+      .where("longitude", ">", longitude - PRECISION)
+      .where("longitude", "<", longitude + PRECISION)
+      .get();
+    const landmarksByLongitude = landmarksByLongitudeResponse.empty
+      ? []
+      : landmarksByLongitudeResponse.docs().map((doc) => doc.id);
 
     const landmarks = landmarksByAltitude.filter((landmark) =>
       landmarksByLongitude.includes(landmark)
