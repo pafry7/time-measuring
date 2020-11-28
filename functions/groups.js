@@ -28,6 +28,10 @@ module.exports = {
     console.log("user groups [0] response: ");
     console.log(response.docs[0]);
 
+    response.forEach((doc) => {
+      console.log(doc.id, "=>", doc.data());
+    });
+
     return response.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
