@@ -5,10 +5,10 @@ const functions = require("firebase-functions");
 const { loginUser, getUser, updateUser } = require("./users");
 const { getChallenge, createChallenge, addGroup } = require("./challenges");
 const { getGroup, createGroup, addMember } = require("./groups");
+const { addLocation, verifyPhoto, getUserApproaches } = require("./approaches");
 
 const express = require("express");
 const cors = require("cors");
-const { addLocation, verifyPhoto, getUserApproaches } = require("./approaches");
 
 const app = express();
 app.use(cors({ origin: true }));
@@ -22,6 +22,8 @@ app.post("/hello", async (req, res) => {
 });
 
 app.get("/users/:id", async (req, res) => {
+  // TODO
+  // Fetch user's challenges.
   res.send(await getUser(req.params.id));
 });
 
@@ -40,7 +42,7 @@ app.get("/challenges/:id", async (req, res) => {
 });
 
 app.get("/challenges", async (req, res) => {
-  res.send(await getAvailableChallenges(req.params.id));
+  res.send(await getAvailableChallenges());
 });
 
 app.post("/challenges", async (req, res) => {
@@ -50,6 +52,7 @@ app.post("/challenges", async (req, res) => {
 
 app.post("/challenges/:id/groups", async (req, res) => {
   const { group_id } = req.body;
+  console.log(group_id, req.params.id);
   res.send(await addGroup({ challenge_id: req.params.id, group_id }));
 });
 

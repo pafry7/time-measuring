@@ -31,7 +31,7 @@ module.exports = {
     return challenges;
   },
 
-  getAvailableChallenges: async (id) => {
+  getAvailableChallenges: async () => {
     const challenges = (
       await challengesRef
         .where("end_time", "<", JSON.stringify(new Date()))
