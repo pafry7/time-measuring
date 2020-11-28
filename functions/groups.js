@@ -25,8 +25,9 @@ module.exports = {
       .get();
     if (response.empty) return [];
 
-    console.log("user groups response: ");
-    console.log(response.docs);
+    console.log("user groups [0] response: ");
+    console.log(response.docs[0]);
+
     return response.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
