@@ -9,7 +9,7 @@ module.exports = {
   getApproach: async (id) => {
     const approach = (await approachesRef.doc(id).get()).data();
     const duration =
-      approach.locations[locations.length - 1].timestamp.getTime() -
+      approach.locations[approach.locations.length - 1].timestamp.getTime() -
       approach.locations[0].timestamp.getTime();
     return { ...approach, duration, id };
   },
