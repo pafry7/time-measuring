@@ -2,6 +2,12 @@ const { v4 } = require("uuid");
 const { usersRef } = require("./common");
 const { getGroupsWithUser } = require("./groups");
 
+const createUser = async (mail) => {
+  const id = v4();
+  await usersRef.doc(id).set({ mail });
+  return id;
+};
+
 module.exports = {
   loginUser: async (mail) => {
     const snapshot = await usersRef.where("mail", "==", mail).get();
@@ -18,12 +24,6 @@ module.exports = {
     const user = (await usersRef.doc(id).get()).data();
     const groups = await getGroupsWithUser(id);
     return { ...user, id, groups };
-  },
-
-  createUser: async (mail) => {
-    const id = v4();
-    await usersRef.doc(id).set({ mail });
-    return id;
   },
 
   updateUser: async ({ id, user }) => {
