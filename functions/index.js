@@ -26,7 +26,6 @@ app.post("/activities/:id/location", async (req, res) => {
 app.post("/activities/:id/photo", async (req, res) => {
   const { photo } = req.body;
   await addPhoto({ id, photo });
-
   res.send("Photo accepted to verification.");
 });
 

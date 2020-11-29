@@ -16,6 +16,7 @@ module.exports = {
     const variables = {
       object: {
         ...activity,
+        locations: "[]",
         verified: false,
         expect_photo: false,
       },
