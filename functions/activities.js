@@ -24,8 +24,6 @@ module.exports = {
     const response = await got.post(DB_URL, {
       body: JSON.stringify({ query, variables }),
     });
-    console.log("response activity create: ");
-    console.log(JSON.parse(response.body));
     const { id } = JSON.parse(response.body).data.insert_activities_one;
     return JSON.stringify({ id });
   },
@@ -52,6 +50,11 @@ module.exports = {
         }
       }
     `;
+
+    console.log("locations in db:");
+    console(locations);
+    console.log("provided location:");
+    console.log(location);
     const variables = {
       locations: JSON.stringify([...JSON.parse(locations), location]),
     };
