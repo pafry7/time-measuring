@@ -152,11 +152,13 @@ module.exports = {
       }
     `;
 
-    const { expect_photo } = (
-      await got.post(DB_URL, {
-        body: JSON.stringify({ query: queryPhoto }),
-      })
-    ).body.data.activities_by_pk;
+    const { expect_photo } = JSON.parse(
+      (
+        await got.post(DB_URL, {
+          body: JSON.stringify({ query: queryPhoto }),
+        })
+      ).body
+    ).data.activities_by_pk;
 
     if (!expect_photo) {
       const queryUser = `
