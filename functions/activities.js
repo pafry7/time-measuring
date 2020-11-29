@@ -55,6 +55,8 @@ module.exports = {
     console.log(locations);
     console.log("provided location:");
     console.log(location);
+    console.log("merged locations:");
+    console.log(JSON.stringify([...JSON.parse(locations), location]));
     const variables = {
       locations: JSON.stringify([...JSON.parse(locations), location]),
     };
