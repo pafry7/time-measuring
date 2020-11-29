@@ -39,7 +39,7 @@ module.exports = {
       }
     `;
     const { locations } = (
-      await got.post(DB_URL, { body: JSON.parse({ query }) })
+      await got.post(DB_URL, { body: JSON.stringify({ query }) })
     ).data.activities_by_pk;
 
     const mutation = `
