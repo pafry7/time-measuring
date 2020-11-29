@@ -96,7 +96,7 @@ module.exports = {
         }
       }
     `;
-    const { locations: locationsString } = (
+    const { locations: locationsString } = JSON.parse(
       await got.post(DB_URL, { body: JSON.stringify({ query }) })
     ).data.activities_by_pk;
 
