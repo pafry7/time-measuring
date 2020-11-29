@@ -51,11 +51,11 @@ module.exports = {
       }
     `;
 
-    console.log("locations in db:");
-    console.log(locations);
-    console.log("provided location:");
-    console.log(location);
-    console.log("merged locations:");
+    // console.log("locations in db:");
+    // console.log(locations);
+    // console.log("provided location:");
+    // console.log(location);
+    // console.log("merged locations:");
     console.log(JSON.stringify([...JSON.parse(locations), location]));
     const variables = {
       locations: JSON.stringify([...JSON.parse(locations), location]),
@@ -116,6 +116,8 @@ module.exports = {
       elevation: locations[0] && locations[0].elevation,
     };
     for (const location of locations) {
+      console.log("location for distance:");
+      console.log(location);
       const step = Math.sqrt(
         Math.pow(
           Math.abs(location.latitude - recentParams.latitude) * KmInDegree,
