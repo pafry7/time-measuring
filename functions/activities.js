@@ -27,7 +27,7 @@ module.exports = {
     console.log("response activity create: ");
     console.log(JSON.parse(response.body));
     const { id } = JSON.parse(response.body).data.insert_activities_one;
-    return id;
+    return JSON.stringify({ id });
   },
 
   addLocation: async ({ id, location }) => {
