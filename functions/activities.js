@@ -104,9 +104,9 @@ module.exports = {
 
     let distance = 0;
     let recentParams = {
-      latitude: locations[0]?.latitude,
-      longitude: locations[0]?.longitude,
-      elevation: locations[0]?.elevation,
+      latitude: locations[0] && locations[0].latitude,
+      longitude: locations[0] && locations[0].longitude,
+      elevation: locations[0] && locations[0].elevation,
     };
     for (const location of locations) {
       const step = Math.sqrt(
