@@ -52,7 +52,7 @@ module.exports = {
     `;
 
     console.log("locations in db:");
-    console(locations);
+    console.log(locations);
     console.log("provided location:");
     console.log(location);
     const variables = {
