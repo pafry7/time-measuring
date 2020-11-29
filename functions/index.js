@@ -8,7 +8,6 @@ const { addLocation, addPhoto, createActivity } = require("./activities");
 
 const express = require("express");
 const cors = require("cors");
-const { createActivity } = require("./activities");
 
 const app = express();
 app.use(cors({ origin: true }));
