@@ -20,7 +20,7 @@ app.post("/activities", async (req, res) => {
 
 app.post("/activities/:id/location", async (req, res) => {
   const { ...location } = req.body;
-  res.send(await addLocation({ id, location }));
+  res.send(await addLocation({ id: req.params.id, location }));
 });
 
 app.post("/activities/:id/photo", async (req, res) => {
