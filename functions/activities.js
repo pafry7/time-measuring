@@ -1,5 +1,5 @@
 const { findLandmark } = require("./locations");
-
+const { degradeUser } = require("./users");
 const got = require("got");
 const { DB_URL } = require("./common");
 const KmInDegree = 111;
