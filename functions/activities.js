@@ -21,10 +21,10 @@ module.exports = {
       },
     };
     const response = await got.post(DB_URL, {
-      body: { query, variables },
+      body: JSON.stringify({ query, variables }),
     });
     console.log(response);
-    const { id } = response.body.data.insert_activities_one;
+    const { id } = JSON.parse(response.body).data.insert_activities_one;
     return id;
   },
 
