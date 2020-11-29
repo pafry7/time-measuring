@@ -113,7 +113,6 @@ module.exports = {
     let recentParams = {
       latitude: locations[0] && locations[0].latitude,
       longitude: locations[0] && locations[0].longitude,
-      elevation: locations[0] && locations[0].elevation,
     };
     for (const location of locations) {
       console.log("location for distance:");
@@ -126,10 +125,7 @@ module.exports = {
           Math.pow(
             Math.abs(location.longitude - recentParams.longitude) * KmInDegree,
             2
-          ) +
-          location.elevation && recentParams.elevation
-          ? Math.pow(math.abs(location.elevation - recentParams.elevation), 2)
-          : 0
+          )
       );
       recentParams = {
         ...location,
