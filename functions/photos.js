@@ -21,7 +21,7 @@ module.exports = {
 
     await got.post(DB_URL, {
       body: JSON.stringify({
-        mutation: mutationPhoto,
+        query: mutationPhoto,
         variables: variablesPhoto,
       }),
     });

@@ -61,7 +61,9 @@ module.exports = {
       locations: JSON.stringify([...JSON.parse(locations), location]),
     };
 
-    await got.post(DB_URL, { body: JSON.stringify({ mutation, variables }) });
+    await got.post(DB_URL, {
+      body: JSON.stringify({ query: mutation, variables }),
+    });
 
     const { latitude, longitude } = location;
 
@@ -84,7 +86,7 @@ module.exports = {
 
       await got.post(DB_URL, {
         body: JSON.stringify({
-          mutation: mutationPhoto,
+          query: mutationPhoto,
           variables: variablesPhoto,
         }),
       });
@@ -147,7 +149,9 @@ module.exports = {
       distance,
     };
 
-    await got.post(DB_URL, { body: JSON.stringify({ mutation, variables }) });
+    await got.post(DB_URL, {
+      body: JSON.stringify({ query: mutation, variables }),
+    });
 
     const queryPhoto = `
       query MyQuery {
