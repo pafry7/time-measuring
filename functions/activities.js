@@ -168,10 +168,12 @@ module.exports = {
           }
         }
     `;
-      const { user_id } = (
-        await got.post(DB_URL, {
-          body: JSON.stringify({ query: queryUser }),
-        })
+      const { user_id } = JSON.parse(
+        (
+          await got.post(DB_URL, {
+            body: JSON.stringify({ query: queryUser }),
+          })
+        ).body
       ).data.activities_by_pk;
       await degradeUser(user_id);
     }
