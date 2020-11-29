@@ -23,7 +23,8 @@ module.exports = {
     const response = await got.post(DB_URL, {
       body: { query, variables },
     });
-    const { id } = response.data.insert_activities_one;
+    console.log(response);
+    const { id } = response.body.data.insert_activities_one;
     return id;
   },
 
