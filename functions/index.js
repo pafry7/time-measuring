@@ -3,7 +3,7 @@ admin.initializeApp();
 
 const functions = require("firebase-functions");
 
-const { addLocation, createActivity } = require("./activities");
+const { addLocation, createActivity, endActivity } = require("./activities");
 const { addPhoto } = require("./photos");
 
 const express = require("express");
