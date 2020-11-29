@@ -38,8 +38,8 @@ module.exports = {
         }
       }
     `;
-    const { locations } = (
-      await got.post(DB_URL, { body: JSON.stringify({ query }) })
+    const { locations } = JSON.parse(
+      (await got.post(DB_URL, { body: JSON.stringify({ query }) })).body
     ).data.activities_by_pk;
 
     const mutation = `

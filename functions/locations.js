@@ -23,10 +23,12 @@ module.exports = {
         }
       }
     `;
-    const { landmarks } = (
-      await got.post(DB_URL, {
-        body: JSON.stringify({ query, variables }),
-      })
+    const { landmarks } = JSON.parse(
+      (
+        await got.post(DB_URL, {
+          body: JSON.stringify({ query, variables }),
+        })
+      ).body
     ).data;
     return landmarks && landmarks[0];
   },
