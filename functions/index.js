@@ -4,7 +4,8 @@ admin.initializeApp();
 const functions = require("firebase-functions");
 
 const { getAvailableChallenges } = require("./challenges");
-const { addLocation, addPhoto, createActivity } = require("./activities");
+const { addLocation, createActivity } = require("./activities");
+const { addPhoto } = require("./photos");
 
 const express = require("express");
 const cors = require("cors");
