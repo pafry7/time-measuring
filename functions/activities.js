@@ -96,9 +96,9 @@ module.exports = {
         }
       }
     `;
-    const { locations: locationsString } = (
-      await got.post(DB_URL, { body: JSON.stringify({ query }) })
-    ).body.data.activities_by_pk;
+    const { locations: locationsString } = JSON.parse(
+      (await got.post(DB_URL, { body: JSON.stringify({ query }) })).body
+    ).data.activities_by_pk;
 
     const locations = JSON.parse(locationsString);
 
@@ -156,7 +156,7 @@ module.exports = {
       await got.post(DB_URL, {
         body: JSON.stringify({ query: queryPhoto }),
       })
-    ).data.activities_by_pk;
+    ).body.data.activities_by_pk;
 
     if (!expect_photo) {
       const queryUser = `
