@@ -134,6 +134,7 @@ module.exports = {
       recentParams = {
         ...location,
       };
+      console.log("actual step: " + step);
       distance += step;
     }
 
