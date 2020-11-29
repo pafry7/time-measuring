@@ -15,7 +15,7 @@ app.use(cors({ origin: true }));
 app.get("/", (_, res) => res.send("Hello!"));
 
 app.post("/activities", async (req, res) => {
-  res.send(await createActivity({ ...req }));
+  res.send(await createActivity({ ...req.body }));
 });
 
 app.post("/activities/:id/location", async (req, res) => {
