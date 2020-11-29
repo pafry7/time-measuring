@@ -16,7 +16,7 @@ module.exports = {
     const variables = {
       object: {
         ...activity,
-        verifies: false,
+        verified: false,
         expect_photo: false,
       },
     };
@@ -155,22 +155,20 @@ module.exports = {
       })
     ).data.activities_by_pk;
 
-    const queryUser = `
-      query MyQuery {
-        activities_by_pk(id: "${id}") {
-          user_id
-        }
-      }
-  `;
-    const { user_id } = (
-      await got.post(DB_URL, {
-        body: JSON.stringify({ query: queryUser }),
-      })
-    ).data.activities_by_pk;
     if (!expect_photo) {
+      const queryUser = `
+        query MyQuery {
+          activities_by_pk(id: "${id}") {
+            user_id
+          }
+        }
+    `;
+      const { user_id } = (
+        await got.post(DB_URL, {
+          body: JSON.stringify({ query: queryUser }),
+        })
+      ).data.activities_by_pk;
       await degradeUser(user_id);
-    } else {
-      await upgradeUser(user_id);
     }
 
     return;

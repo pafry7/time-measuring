@@ -3,7 +3,6 @@ admin.initializeApp();
 
 const functions = require("firebase-functions");
 
-const { getAvailableChallenges } = require("./challenges");
 const { addLocation, createActivity } = require("./activities");
 const { addPhoto } = require("./photos");
 
@@ -14,10 +13,6 @@ const app = express();
 app.use(cors({ origin: true }));
 
 app.get("/", (_, res) => res.send("Hello!"));
-
-app.get("/challenges", async (req, res) => {
-  res.send(await getAvailableChallenges());
-});
 
 app.post("/activities", async (req, res) => {
   res.send(await createActivity({ ...req }));
