@@ -1,101 +1,151 @@
-const { approachesRef } = require("./common");
-const { v4 } = require("uuid");
 const { findLandmark } = require("./locations");
-const locations = require("./locations");
-const { getChallenge } = require("./challenges");
+
+const got = require("got");
+const { DB_URL } = require("./common");
 const KmInDegree = 111;
 
 module.exports = {
-  getApproach: async (id) => {
-    const approach = (await approachesRef.doc(id).get()).data();
-    const duration =
-      approach.locations[approach.locations.length - 1].timestamp.getTime() -
-      approach.locations[0].timestamp.getTime();
-    return { ...approach, duration, id };
-  },
-  createApproach: async (approach) => {
-    const challenge = await getChallenge(approach.challenge_id);
-    if (JSON.parse(challenge.start_time) > new Date())
-      throw new Error("Challenge not started yet");
-
-    const id = v4();
-    await approachesRef.doc(id).set({ ...approach });
-    return { ...approach, locations: [], id, verified: false };
-  },
-  getSumOfPlayerApproaches: async (id) => {
-    const response = await approachesRef.where("player_id", "==", id).get();
-    if (response.empty) return 0;
-
-    const approaches = response.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    let distance = 0;
-    for (const approach of approaches) {
-      distance += approach.distance;
-    }
-    return distance;
-  },
-  addLocation: async ({ id, location }) => {
-    const approach = (await approachesRef.doc(id).get()).data();
-    const response = await approachesRef
-      .doc(id)
-      .update({ locations: [...approach.locations, location] });
-
-    const { verified } = (await approachesRef.doc(id).get()).data();
-
-    if (!verified) {
-      const { altitude, longitude } = location;
-
-      const nearestLandmark = findLandmark({ altitude, longitude });
-
-      if (nearestLandmark) {
-        // TODO
-        // Ask user to send photo from landmark
+  createActivity: async (activity) => {
+    const query = `
+      mutation MyMutation($object: activities_insert_input!) {
+        insert_activities_one(object: $object) {
+          id
+        }
       }
-    }
+    `;
+    const variables = {
+      object: {
+        ...activity,
+        verifies: false,
+        expect_photo: false,
+      },
+    };
+    const response = await got.post(DB_URL, {
+      body: JSON.stringify({ query, variables }),
+    });
+    const { id } = JSON.parse(response).data.insert_activities_one;
+    return id;
   },
-  verifyPhoto: async ({ id, photo }) => {
+
+  addLocation: async ({ id, location }) => {
+    const query = `
+      query MyQuery {
+        activities_by_pk(id:  "${id}") {
+          locations
+        }
+      }
+    `;
+    const { locations } = (
+      await got.post(DB_URL, { body: JSON.parse({ query }) })
+    ).data.activities_by_pk;
+
+    const mutation = `
+      mutation MyMutation($locations: String) {
+        update_activities_by_pk(
+          pk_columns: {id:    "${id}"}
+          _set: {locations: $locations}
+        ) {
+          locations
+        }
+      }
+    `;
+    const variables = {
+      locations: JSON.stringify([...JSON.parse(locations), location]),
+    };
+
+    await got.post(DB_URL, { body: JSON.stringify({ mutation, variables }) });
+
+    const { latitude, longitude } = location;
+
+    const nearestLandmark = await findLandmark({ latitude, longitude });
+
+    if (nearestLandmark) {
+      const mutationPhoto = `
+        mutation MyMutation($locations: String) {
+          update_activities_by_pk(
+            pk_columns: {id:    "${id}"}
+            _set: {expect_photo: true}
+          ) {
+            locations
+          }
+        }
+    `;
+      const variablesPhoto = {
+        locations: JSON.stringify([...JSON.parse(locations), location]),
+      };
+
+      await got.post(DB_URL, {
+        body: JSON.stringify({
+          mutation: mutationPhoto,
+          variables: variablesPhoto,
+        }),
+      });
+
+      return { expect_photo: true };
+    } else return;
+  },
+
+  addPhoto: async ({ id, photo }) => {
     // TODO
     // Two possibilities:
     // a. ) Save photo base64 encoded in db
     // b. ) Save to Firebase Storage as `${id}.png`
 
-    await approachesRef.doc(id).update({ verified: true });
+    const mutationPhoto = `
+      mutation MyMutation($locations: String) {
+        update_activities_by_pk(
+          pk_columns: {id:    "${id}"}
+          _set: {expect_photo: false, verified: true}
+        ) {
+          locations
+        }
+      }
+  `;
+    const variablesPhoto = {
+      locations: JSON.stringify([...JSON.parse(locations), location]),
+    };
+
+    await got.post(DB_URL, {
+      body: JSON.stringify({
+        mutation: mutationPhoto,
+        variables: variablesPhoto,
+      }),
+    });
   },
-  getUserApproaches: async (id) => {
-    const approaches = await approachesRef.where("player_id", "==", id).get();
-    if (approaches.empty) return [];
-    else {
-      return approaches.docs.map((doc) => {
-        const doc_details = doc.data();
-        const duration =
-          doc_details.locations[locations.length - 1].timestamp.getTime() -
-          doc_details.locations[0].timestamp.getTime();
-        return { id: doc.id, ...doc_details, duration };
-      });
-    }
-  },
-  endApproach: async (id) => {
-    const { locations } = (await approachesRef.doc(id).get()).data();
+
+  endActivity: async (id) => {
+    const query = `
+      query MyQuery {
+        activities_by_pk(id:  "${id}") {
+          locations
+        }
+      }
+    `;
+    const { locations: locationsString } = (
+      await got.post(DB_URL, { body: JSON.parse({ query }) })
+    ).data.activities_by_pk;
+
+    const locations = JSON.parse(locationsString);
 
     let distance = 0;
     let recentParams = {
-      altitude: locations[0].altitude,
+      latitude: locations[0].latitude,
       longitude: locations[0].longitude,
       elevation: locations[0].elevation,
     };
     for (const location of locations) {
       const step = Math.sqrt(
         Math.pow(
-          Math.abs(location.altitude - recentParams.altitude) * KmInDegree,
+          Math.abs(location.latitude - recentParams.latitude) * KmInDegree,
           2
         ) +
           Math.pow(
             Math.abs(location.longitude - recentParams.longitude) * KmInDegree,
             2
           ) +
-          Math.pow(math.abs(location.elevation - recentParams.elevation), 2)
+          location.elevation && recentParams.elevation
+          ? Math.pow(math.abs(location.elevation - recentParams.elevation), 2)
+          : 0
       );
       recentParams = {
         ...location,
@@ -103,7 +153,54 @@ module.exports = {
       distance += step;
     }
 
-    await approachesRef.doc(id).update({ distance });
+    const mutation = `
+      mutation MyMutation($distance: numeric) {
+        update_activities_by_pk(
+          pk_columns: {id: "${id}"}
+          _set: {distance: $distance}
+        ) {
+          locations
+        }
+      }
+    `;
+    const variables = {
+      distance,
+    };
+
+    await got.post(DB_URL, { body: JSON.stringify({ mutation, variables }) });
+
+    const queryPhoto = `
+      query MyQuery {
+        activities_by_pk(id: "${id}") {
+          expect_photo
+        }
+      }
+    `;
+
+    const { expect_photo } = (
+      await got.post(DB_URL, {
+        body: JSON.stringify({ query: queryPhoto }),
+      })
+    ).data.activities_by_pk;
+
+    const queryUser = `
+      query MyQuery {
+        activities_by_pk(id: "${id}") {
+          user_id
+        }
+      }
+  `;
+    const { user_id } = (
+      await got.post(DB_URL, {
+        body: JSON.stringify({ query: queryUser }),
+      })
+    ).data.activities_by_pk;
+    if (!expect_photo) {
+      await degradeUser(user_id);
+    } else {
+      await upgradeUser(user_id);
+    }
+
     return;
   },
 };
