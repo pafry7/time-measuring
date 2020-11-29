@@ -23,7 +23,6 @@ module.exports = {
     const response = await got.post(DB_URL, {
       body: JSON.stringify({ query, variables }),
     });
-    console.log(response);
     const { id } = JSON.parse(response.body).data.insert_activities_one;
     return id;
   },
@@ -83,7 +82,7 @@ module.exports = {
       });
 
       return { expect_photo: true };
-    } else return;
+    } else return { expect_photo: false };
   },
 
   endActivity: async (id) => {
