@@ -21,7 +21,7 @@ module.exports = {
       },
     };
     const response = await got.post(DB_URL, {
-      body: JSON.stringify({ query, variables }),
+      body: { query, variables },
     });
     const { id } = response.data.insert_activities_one;
     return id;
